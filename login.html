@@ -35,12 +35,12 @@
     fetch(`${WEB_APP_URL}?email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`)
       .then(response => response.text())
       .then(result => {
-        if(result === "true"){
-          alert("Login Successful!");
-          window.location.href = "features.html"; // Redirect to features page
-        } else {
-          alert("Invalid email or code!");
-        }
+        if(result === "success"){
+  alert("Login Successful!");
+  window.location.href = "features.html"; // Student dashboard page
+} else {
+  alert("Invalid email or code!");
+}
       })
       .catch(err => {
         alert("Error connecting to server. Please try again.");
