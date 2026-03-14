@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Login - A. Kumar Saraswati Vidhya Mandir</title>
+  <style>
+    body{font-family: Arial, sans-serif; background:#f2f2f2; display:flex; justify-content:center; align-items:center; height:100vh;}
+    .login-box{background:white; padding:30px; border-radius:8px; box-shadow:0 0 10px gray; width:320px; text-align:center;}
+    h2{margin-bottom:20px;}
+    input{width:100%; padding:10px; margin:10px 0; border:1px solid #ccc; border-radius:5px;}
+    button{width:100%; padding:12px; background:#004aad; color:white; border:none; border-radius:5px; font-size:16px; cursor:pointer;}
+    button:hover{background:#003080;}
+  </style>
+</head>
+<body>
+
+<div class="login-box">
+  <h2>Student Login</h2>
+  <input type="email" id="email" placeholder="Enter your Email" required>
+  <input type="text" id="code" placeholder="Enter Login Code" required>
+  <button onclick="login()">Login</button>
+</div>
+
+<script>
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-ieT87PvjJCHSw4CTOTn4uQUo7H3W6pSH1rIIeLb_TlgvaohrORRxOCNW6wzLINZZqg/exec"; // Replace with your deployed Apps Script Web App URL
+
+  function login(){
+    const email = document.getElementById('email').value.trim();
+    const code = document.getElementById('code').value.trim();
+
+    if(email === "" || code === ""){
+      alert("Please enter both Email and Login Code.");
+      return;
+    }
+
+    fetch(`${WEB_APP_URL}?email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`)
+      .then(response => response.text())
+      .then(result => {
+        if(result === "true"){
+          alert("Login Successful!");
+          window.location.href = "features.html"; // Redirect to features page
+        } else {
+          alert("Invalid email or code!");
+        }
+      })
+      .catch(err => {
+        alert("Error connecting to server. Please try again.");
+        console.error(err);
+      });
+  }
+</script>
+
+</body>
+</html>

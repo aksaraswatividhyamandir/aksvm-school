@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Admission Form</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f2f2f2;
+}
+
+.form-box{
+width:350px;
+background:white;
+padding:20px;
+margin:auto;
+margin-top:40px;
+border-radius:8px;
+box-shadow:0 0 10px gray;
+}
+
+h2{
+text-align:center;
+}
+
+input, select, textarea{
+width:100%;
+padding:8px;
+margin-top:5px;
+margin-bottom:12px;
+}
+
+button{
+width:100%;
+padding:10px;
+background:#004aad;
+color:white;
+border:none;
+font-size:16px;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#003080;
+}
+
+.link-btn{
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="form-box">
+
+<h2>Admission Form</h2>
+
+<form onsubmit="submitForm(); return false;">
+
+<label>Student Name</label>
+<input type="text" required>
+
+<label>Father Name</label>
+<input type="text" required>
+
+<label>Mother Name</label>
+<input type="text">
+
+<label>Class Applying For</label>
+
+<select required>
+<option value="">Select Class</option>
+<option>Nursery</option>
+<option>LKG</option>
+<option>UKG</option>
+<option>Class 1</option>
+<option>Class 2</option>
+<option>Class 3</option>
+<option>Class 4</option>
+<option>Class 5</option>
+<option>Class 6</option>
+<option>Class 7</option>
+<option>Class 8</option>
+</select>
+
+<label>Phone Number</label>
+<input type="tel" required>
+
+<label>Address</label>
+<textarea rows="3"></textarea>
+
+<button type="submit">Submit Admission</button>
+
+</form>
+
+<h3 style="text-align:center;">OR</h3>
+
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSf7s_FP0HYer8V7G_xYYGowGJCX8v7GAVeVIheYqAZWAvzpiQ/viewform?usp=publish-editor" target="_blank">
+<button class="link-btn">Fill Admission Form Online</button>
+</a>
+
+</div>
+
+<script>
+
+function submitForm(){
+alert("Admission Form Submitted Successfully!");
+}
+
+</script>
+
+</body>
+</html>
