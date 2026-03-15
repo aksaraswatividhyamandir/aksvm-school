@@ -31,24 +31,31 @@ h2{text-align:center;}
 </section>
 
 <script>
-const WEB_APP_URL="https://script.google.com/macros/s/AKfycbx55wOKLAEy5KENFAV_lNQweL7Ga2fcmEiMnDoaH1aPqou2V_qOPD-9S4jTSyJZxsOGMA/exec"; // Replace with deployed Apps Script URL
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzn5p5HQBIDMNjjTlHFDtoD1t_HLg_z0omoSV736DNXjtQ_W1ifq_D4Y-5FoBVVQb4Y3w/exec"; // replace with your Apps Script URL
 
 function submitDoubt(){
 let name=document.getElementById('studentName').value.trim();
 let q=document.getElementById('question').value.trim();
 if(!name||!q){alert("Enter name and doubt");return;}
+
 fetch(`${WEB_APP_URL}?submitDoubt=true&name=${encodeURIComponent(name)}&question=${encodeURIComponent(q)}`)
-.then(r=>r.text()).then(r=>{
-if(r==="success"){alert("Doubt submitted");document.getElementById('question').value="";loadDoubts();}
-else alert("Error submitting");});
+.then(r=>r.text())
+.then(r=>{
+if(r==="success"){
+alert("Doubt submitted successfully!");
+document.getElementById('question').value="";
+loadDoubts();
+}else alert("Error submitting doubt!");
+})
+.catch(err=>{alert("Server error! Try again");console.error(err);});
 }
 
 function loadDoubts(){
 fetch(`${WEB_APP_URL}?getDoubts=true`)
-.then(r=>r.json()).then(data=>{
+.then(r=>r.json())
+.then(data=>{
 let html="";
-data.forEach((d,i)=>{
-html+=`<div class="doubt"><b>${d.studentName}</b>: ${d.question}<br><span class="status">Answer: ${d.answer||"Pending"}</span></div>`;});
+data.forEach(d=>{html+=`<div class="doubt"><b>${d.studentName}</b>: ${d.question}<br><span class="status">Answer: ${d.answer}</span></div>`;});
 document.getElementById('doubtsList').innerHTML=html;
 });
 }
