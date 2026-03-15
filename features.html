@@ -1,22 +1,61 @@
 <!DOCTYPE html>
 <html>
-<head><title>Submit Doubt</title></head>
+<head>
+<title>Student Features</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;padding:0;background:#f2f2f2;}
+header{background:#004aad;color:white;padding:15px;text-align:center;}
+section{padding:20px;margin:20px auto;width:90%;max-width:600px;background:white;border-radius:8px;box-shadow:0 0 10px gray;}
+input,textarea,button{width:100%;padding:10px;margin:10px 0;border:1px solid #ccc;border-radius:5px;}
+button{background:#004aad;color:white;border:none;cursor:pointer;font-size:16px;}
+button:hover{background:#003080;}
+h2{text-align:center;}
+.doubt{border-bottom:1px solid #ccc;padding:10px 0;}
+.status{font-weight:bold;}
+</style>
+</head>
 <body>
+
+<header><h1>Welcome Student</h1></header>
+
+<section>
 <h2>Submit Your Doubt</h2>
-<input type="text" id="name" placeholder="Your Name">
-<input type="text" id="class" placeholder="Class">
-<textarea id="question" placeholder="Write your doubt"></textarea><br>
-<button onclick="submitDoubt()">Submit</button>
+<input type="text" id="studentName" placeholder="Enter Your Name">
+<textarea id="question" placeholder="Enter Your Doubt"></textarea>
+<button onclick="submitDoubt()">Submit Doubt</button>
+</section>
+
+<section>
+<h2>Previous Doubts</h2>
+<div id="doubtsList">Loading...</div>
+</section>
+
 <script>
-const WEB_APP_URL="https://script.google.com/macros/s/AKfycbx55wOKLAEy5KENFAV_lNQweL7Ga2fcmEiMnDoaH1aPqou2V_qOPD-9S4jTSyJZxsOGMA/exec";
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbx55wOKLAEy5KENFAV_lNQweL7Ga2fcmEiMnDoaH1aPqou2V_qOPD-9S4jTSyJZxsOGMA/exec"; // Replace with deployed Apps Script URL
+
 function submitDoubt(){
-const name=document.getElementById("name").value.trim();
-const cls=document.getElementById("class").value.trim();
-const question=document.getElementById("question").value.trim();
-if(!name||!cls||!question){alert("All fields required!");return;}
-fetch(`${WEB_APP_URL}?submitDoubt=true&name=${encodeURIComponent(name)}&class=${encodeURIComponent(cls)}&question=${encodeURIComponent(question)}`)
-.then(r=>r.text()).then(res=>{if(res==="success"){alert("Doubt submitted!");document.getElementById("name").value="";document.getElementById("class").value="";document.getElementById("question").value="";}else alert("Error");});
+let name=document.getElementById('studentName').value.trim();
+let q=document.getElementById('question').value.trim();
+if(!name||!q){alert("Enter name and doubt");return;}
+fetch(`${WEB_APP_URL}?submitDoubt=true&name=${encodeURIComponent(name)}&question=${encodeURIComponent(q)}`)
+.then(r=>r.text()).then(r=>{
+if(r==="success"){alert("Doubt submitted");document.getElementById('question').value="";loadDoubts();}
+else alert("Error submitting");});
 }
+
+function loadDoubts(){
+fetch(`${WEB_APP_URL}?getDoubts=true`)
+.then(r=>r.json()).then(data=>{
+let html="";
+data.forEach((d,i)=>{
+html+=`<div class="doubt"><b>${d.studentName}</b>: ${d.question}<br><span class="status">Answer: ${d.answer||"Pending"}</span></div>`;});
+document.getElementById('doubtsList').innerHTML=html;
+});
+}
+
+// Load doubts on page load
+loadDoubts();
 </script>
+
 </body>
 </html>
