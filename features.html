@@ -1,59 +1,22 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Student Portal - A. Kumar Saraswati Vidhya Mandir</title>
-  <style>
-    body {font-family: Arial, sans-serif; background:#f9f9f9; margin:0; padding:0;}
-    header {background:#004aad; color:white; padding:20px; text-align:center;}
-    nav {background:#003080; padding:10px; text-align:center;}
-    nav a {color:white; margin:0 15px; text-decoration:none; font-weight:bold;}
-    nav a:hover {text-decoration:underline;}
-    .section {padding:30px; text-align:center;}
-    .feature-box {background:white; padding:20px; margin:15px auto; border-radius:8px; box-shadow:0 0 10px gray; width:80%; max-width:500px;}
-    footer {background:#222; color:white; padding:15px 0; text-align:center;}
-  </style>
-</head>
+<head><title>Submit Doubt</title></head>
 <body>
-
-<!-- Header -->
-<header>
-  <h1>Student Portal</h1>
-  <p>Welcome to A. Kumar Saraswati Vidhya Mandir Student Features</p>
-</header>
-
-<!-- Navigation -->
-<nav>
-  <a href="index.html">Home</a>
-  <a href="login.html">Logout</a>
-</nav>
-
-<!-- Features Section -->
-<div class="section">
-  <div class="feature-box">
-    <h2>Notices</h2>
-    <p>Check all the latest school notices here.</p>
-  </div>
-
-  <div class="feature-box">
-    <h2>Assignments</h2>
-    <p>View and download your class assignments.</p>
-  </div>
-
-  <div class="feature-box">
-    <h2>Gallery</h2>
-    <p>See photos from school events and functions.</p>
-  </div>
-
-  <div class="feature-box">
-    <h2>Contact Teachers</h2>
-    <p>Get in touch with your teachers for guidance.</p>
-  </div>
-</div>
-
-<!-- Footer -->
-<footer>
-  &copy; 2026 A. Kumar Saraswati Vidhya Mandir. All rights reserved.
-</footer>
-
+<h2>Submit Your Doubt</h2>
+<input type="text" id="name" placeholder="Your Name">
+<input type="text" id="class" placeholder="Class">
+<textarea id="question" placeholder="Write your doubt"></textarea><br>
+<button onclick="submitDoubt()">Submit</button>
+<script>
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbx55wOKLAEy5KENFAV_lNQweL7Ga2fcmEiMnDoaH1aPqou2V_qOPD-9S4jTSyJZxsOGMA/exec";
+function submitDoubt(){
+const name=document.getElementById("name").value.trim();
+const cls=document.getElementById("class").value.trim();
+const question=document.getElementById("question").value.trim();
+if(!name||!cls||!question){alert("All fields required!");return;}
+fetch(`${WEB_APP_URL}?submitDoubt=true&name=${encodeURIComponent(name)}&class=${encodeURIComponent(cls)}&question=${encodeURIComponent(question)}`)
+.then(r=>r.text()).then(res=>{if(res==="success"){alert("Doubt submitted!");document.getElementById("name").value="";document.getElementById("class").value="";document.getElementById("question").value="";}else alert("Error");});
+}
+</script>
 </body>
 </html>
