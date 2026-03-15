@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head><title>Teacher Login</title></head>
+<body>
+<h2>Teacher Login</h2>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="code" placeholder="Password">
+<button onclick="loginTeacher()">Login</button>
+<script>
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbx55wOKLAEy5KENFAV_lNQweL7Ga2fcmEiMnDoaH1aPqou2V_qOPD-9S4jTSyJZxsOGMA/exec";
+function loginTeacher(){
+const email=document.getElementById('email').value.trim();
+const code=document.getElementById('code').value.trim();
+if(!email||!code){alert("Enter both!");return;}
+fetch(`${WEB_APP_URL}?teacherLogin=true&email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`)
+.then(r=>r.text()).then(res=>{
+if(res==="success"){sessionStorage.setItem("teacherEmail",email);window.location.href="teacher-dashboard.html";}
+else alert("Invalid credentials!");
+});
+}
+</script>
+</body>
+</html>
