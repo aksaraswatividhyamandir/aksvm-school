@@ -1,29 +1,66 @@
 <!DOCTYPE html>
 <html>
-<head><title>Teacher Dashboard</title></head>
+<head>
+<title>Teacher Dashboard</title>
+</head>
+
 <body>
-<h2>Teacher Dashboard</h2>
+
+<h2>Student Doubts</h2>
+
 <div id="doubts"></div>
+
 <script>
-const WEB_APP_URL="https://script.google.com/macros/s/AKfycbx55wOKLAEy5KENFAV_lNQweL7Ga2fcmEiMnDoaH1aPqou2V_qOPD-9S4jTSyJZxsOGMA/exec";
-function loadDoubts(){
-fetch(`${WEB_APP_URL}?getDoubts=true`).then(r=>r.json()).then(data=>{
-let html="<table border='1'><tr><th>#</th><th>Student</th><th>Class</th><th>Question</th><th>Answer</th><th>Status</th><th>Action</th></tr>";
-data.forEach((d,i)=>{
-html+=`<tr><td>${i+1}</td><td>${d.studentName}</td><td>${d.studentClass}</td><td>${d.question}</td>
-<td><input id='ans${i}' value='${d.answer}'></td><td>${d.status}</td>
-<td><button onclick='submitAnswer(${i})'>Submit</button></td></tr>`;
-});
-html+="</table>";
+
+const url="https://script.google.com/macros/s/AKfycbxfWZP9Hm-l5i9gnNWxKO8oIS7TZZdnk2H51dVHQXnLKCXokRQfRB_GdLiy7DAeqmACzg/exec";
+
+load();
+
+function load(){
+
+fetch(url+"?getDoubts=true")
+
+.then(r=>r.json())
+
+.then(data=>{
+
+let html="";
+
+for(let i=0;i<data.length;i++){
+
+html+=data[i].studentName+" : "+data[i].question+"<br>";
+
+html+="<input id='a"+i+"'placeholder='Answer'>";
+
+html+="<button onclick='send("+data[i].id+","+i+")'>Send</button><br><br>";
+
+}
+
 document.getElementById("doubts").innerHTML=html;
+
 });
+
 }
-function submitAnswer(i){
-const answer=document.getElementById(`ans${i}`).value.trim();
-fetch(`${WEB_APP_URL}?submitAnswer=true&index=${i}&answer=${encodeURIComponent(answer)}&teacher=${encodeURIComponent(sessionStorage.getItem("teacherEmail"))}`)
-.then(r=>r.text()).then(res=>{if(res==="success"){alert("Answer submitted!");loadDoubts();}else alert("Error");});
+
+function send(id,i){
+
+let ans=document.getElementById("a"+i).value;
+
+fetch(url+"?answerDoubt=true&id="+id+"&answer="+ans)
+
+.then(r=>r.text())
+
+.then(d=>{
+
+alert("Answer Submitted");
+
+load();
+
+});
+
 }
-window.onload=loadDoubts;
+
 </script>
+
 </body>
 </html>
