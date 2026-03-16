@@ -1,23 +1,51 @@
 <!DOCTYPE html>
 <html>
-<head><title>Teacher Login</title></head>
+<head>
+<title>Teacher Login</title>
+</head>
+
 <body>
+
 <h2>Teacher Login</h2>
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="code" placeholder="Password">
-<button onclick="loginTeacher()">Login</button>
+
+<input type="text"id="email"placeholder="Email"><br><br>
+
+<input type="password"id="password"placeholder="Password"><br><br>
+
+<button onclick="login()">Login</button>
+
 <script>
-const WEB_APP_URL="https://script.google.com/macros/s/AKfycbx55wOKLAEy5KENFAV_lNQweL7Ga2fcmEiMnDoaH1aPqou2V_qOPD-9S4jTSyJZxsOGMA/exec";
-function loginTeacher(){
-const email=document.getElementById('email').value.trim();
-const code=document.getElementById('code').value.trim();
-if(!email||!code){alert("Enter both!");return;}
-fetch(`${WEB_APP_URL}?teacherLogin=true&email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`)
-.then(r=>r.text()).then(res=>{
-if(res==="success"){sessionStorage.setItem("teacherEmail",email);window.location.href="teacher-dashboard.html";}
-else alert("Invalid credentials!");
-});
+
+const url="https://script.google.com/macros/s/AKfycbxfWZP9Hm-l5i9gnNWxKO8oIS7TZZdnk2H51dVHQXnLKCXokRQfRB_GdLiy7DAeqmACzg/exec";
+
+function login(){
+
+let email=document.getElementById("email").value;
+let pass=document.getElementById("password").value;
+
+fetch(url+"?teacherLogin=true&email="+email+"&password="+pass)
+
+.then(r=>r.text())
+
+.then(d=>{
+
+if(d=="success"){
+
+alert("Login Success");
+
+window.location="teacher-dashboard.html";
+
+}else{
+
+alert("Invalid credentials");
+
 }
+
+});
+
+}
+
 </script>
+
 </body>
 </html>
