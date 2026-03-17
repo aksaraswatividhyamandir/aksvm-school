@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ask Doubts</title>
+<style>
+body{font-family:Arial; background:#f2f2f2; margin:0; padding:20px;}
+header{background:#004aad; color:white; padding:15px; text-align:center;}
+.card{background:white; padding:15px; margin:10px 0; border-radius:6px; box-shadow:0 0 5px gray;}
+textarea, input{width:100%; padding:10px; margin-top:10px;}
+button{padding:10px 15px; margin-top:10px; background:#004aad; color:white; border:none; border-radius:5px; cursor:pointer;}
+</style>
+</head>
+<body>
+
+<header>Contact Teacher / Ask Doubts</header>
+
+<h3>Ask Doubt</h3>
+<input id="name" placeholder="Your Name">
+<textarea id="question" placeholder="Type your doubt"></textarea>
+<button onclick="submitDoubt()">Submit</button>
+
+<h3>Your Doubts</h3>
+<div id="doubtList"></div>
+
+<script>
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbz3XoOdydDEvr78xO5OSuR6QnUzjMTVHOmAdgHvCgN311-lnIIZxfI1oe4rbPeNBmOT_g/exec";
+let email=localStorage.getItem("studentEmail");
+let studentClass=localStorage.getItem("studentClass");
+if(!email){ alert("Please login first"); window.location.href="login.html"; }
+
+function submitDoubt(){
+  let name=document.getElementById("name").value;
+  let question=document.getElementById("question").value;
+  fetch(`${WEB_APP_URL}?submitDoubt=true&email=${email}&name=${name}&class=${studentClass}&question=${question}`)
+  .then(r=>r.text())
+  .then(()=>{ alert("Doubt Submitted"); loadDoubts(); });
+}
+
+function loadDoubts(){
+  fetch(`${WEB_APP_URL}?getDoubts=true&email=${email}`)
+  .then(r=>r.json())
+  .then(data=>{
+    let html="";
+    data.forEach(d=>{
+      html+=`<div class="card"><b>${d.question}</b><br>Answer: ${d.answer || "Pending"}</div>`;
+    });
+    document.getElementById("doubtList").innerHTML=html;
+  });
+}
+
+loadDoubts();
+</script>
+</body>
+</html>
