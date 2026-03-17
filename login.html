@@ -1,52 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Student Login - A. Kumar Saraswati Vidhya Mandir</title>
-  <style>
-    body{font-family: Arial, sans-serif; background:#f2f2f2; display:flex; justify-content:center; align-items:center; height:100vh;}
-    .login-box{background:white; padding:30px; border-radius:8px; box-shadow:0 0 10px gray; width:320px; text-align:center;}
-    h2{margin-bottom:20px;}
-    input{width:100%; padding:10px; margin:10px 0; border:1px solid #ccc; border-radius:5px;}
-    button{width:100%; padding:12px; background:#004aad; color:white; border:none; border-radius:5px; font-size:16px; cursor:pointer;}
-    button:hover{background:#003080;}
-  </style>
+<title>Student Login</title>
+<style>
+body{font-family:Arial; background:#f2f2f2; margin:0; padding:20px;}
+header{background:#004aad; color:white; padding:15px; text-align:center; font-size:22px;}
+input{width:100%; padding:10px; margin:10px 0; border-radius:5px; border:1px solid #ccc;}
+button{padding:10px 15px; background:#004aad; color:white; border:none; border-radius:5px; cursor:pointer; width:100%;}
+</style>
 </head>
 <body>
 
-<div class="login-box">
-  <h2>Student Login</h2>
-  <input type="email" id="email" placeholder="Enter your Email" required>
-  <input type="text" id="code" placeholder="Enter Login Code" required>
-  <button onclick="login()">Login</button>
-</div>
+<header>Student Login</header>
+
+<input type="email" id="email" placeholder="Email">
+<input type="text" id="loginCode" placeholder="Login Code">
+<button onclick="login()">Login</button>
 
 <script>
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwGHI81U-Xus0DvZsEUF7ik0zZvli7AW4-iQixjXgbcLRLroPEQVXhyHgw8O9tK_nCAxQ/exec"; // Replace with your deployed Apps Script Web App URL
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbz3XoOdydDEvr78xO5OSuR6QnUzjMTVHOmAdgHvCgN311-lnIIZxfI1oe4rbPeNBmOT_g/exec";
 
-  function login(){
-    const email = document.getElementById('email').value.trim();
-    const code = document.getElementById('code').value.trim();
-
-    if(email === "" || code === ""){
-      alert("Please enter both Email and Login Code.");
-      return;
+function login(){
+  let email=document.getElementById("email").value;
+  let loginCode=document.getElementById("loginCode").value;
+  
+  fetch(`${WEB_APP_URL}?studentLogin=true&email=${email}&loginCode=${loginCode}`)
+  .then(r=>r.json())
+  .then(data=>{
+    if(data.status=="success"){
+      localStorage.setItem("studentEmail", email);
+      localStorage.setItem("studentClass", data.class);
+      localStorage.setItem("studentLoggedIn", "true");
+      window.location.href="student-dashboard.html";
+    } else {
+      alert("Invalid Email or Login Code");
     }
-
-    fetch(`${WEB_APP_URL}?email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`)
-      .then(response => response.text())
-      .then(result => {
-        if(result === "success"){
-  alert("Login Successful!");
-  window.location.href = "features.html"; // Student dashboard page
-} else {
-  alert("Invalid email or code!");
+  });
 }
-      })
-      .catch(err => {
-        alert("Error connecting to server. Please try again.");
-        console.error(err);
-      });
-  }
 </script>
 
 </body>
