@@ -1,26 +1,170 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Teacher Dashboard</title>
-<style>
-body{font-family:Arial; background:#f2f2f2; margin:0;}
-header{background:#004aad; color:white; padding:15px; text-align:center;}
-button{padding:15px 20px; margin:20px; font-size:16px; border:none; border-radius:6px; background:#004aad; color:white; cursor:pointer;}
-</style>
+  <title>Teacher Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f2f2f2;
+      margin: 0;
+    }
+
+    header {
+      background: #004aad;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .buttons button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 5px;
+      background: #004aad;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .section {
+      display: none;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 6px;
+      box-shadow: 0 0 5px gray;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    button.answer {
+      margin-top: 10px;
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
-<header><h2>Teacher Dashboard</h2></header>
+<header>
+  <h2>Teacher Dashboard</h2>
+</header>
 
-<div style="text-align:center;">
-  <button onclick="goPage('teacher-doubt.html')">Answer Doubts</button>
-  <button onclick="goPage('teacher-notice.html')">Notices</button>
+<div class="buttons">
+  <button onclick="showSection('doubts')">Answer Doubts</button>
+  <button onclick="showSection('notice')">Notices</button>
+</div>
+
+<div id="doubts" class="section active">
+  <h3>Student Doubts</h3>
+  <div id="doubtList"></div>
+</div>
+
+<div id="notice" class="section">
+  <h3>Notices</h3>
+  <div id="noticeList"></div>
 </div>
 
 <script>
-let email=localStorage.getItem("teacherEmail");
-if(!email){ alert("Please login first"); window.location.href="teacher-login.html"; }
-function goPage(page){ window.location.href=page; }
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbztC6-sab6RVvDIOP9mMfcEfnX8r-Dim7xhJUg2BF9ZUct5x_xiYTcD0niVk1HOgiD-vQ/exec";
+
+  // Check teacher login
+  if(localStorage.getItem("teacherLoggedIn") !== "true") {
+    alert("Please login first");
+    window.location.href = "teacher-login.html";
+  }
+
+  function showSection(id){
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+
+    // Load content when section clicked
+    if(id === 'doubts') loadDoubts();
+    if(id === 'notice') loadNotices();
+  }
+
+  // Load all student doubts
+  function loadDoubts(){
+    fetch(`${WEB_APP_URL}?getAllDoubts=true`)
+    .then(res => res.json())
+    .then(data => {
+      let html = "";
+      data.forEach((d, i) => {
+        html += `
+          <div class="card">
+            <b>${d.name} (${d.class})</b> - ${d.email}<br>
+            ${d.question}<br>
+            <b>Answer:</b> ${d.answer || "Pending"}<br>
+            <textarea id="answer${i}" placeholder="Type answer"></textarea>
+            <button class="answer" onclick="sendAnswer(${d.row}, ${i})">Submit Answer</button>
+          </div>
+        `;
+      });
+      document.getElementById("doubtList").innerHTML = html;
+    });
+  }
+
+  // Send answer to App Script
+  function sendAnswer(row, index){
+    let answer = document.getElementById("answer"+index).value;
+    if(answer.trim() === "") {
+      alert("Answer cannot be empty");
+      return;
+    }
+    fetch(`${WEB_APP_URL}?answerDoubt=true&row=${row}&answer=${encodeURIComponent(answer)}`)
+    .then(res => res.text())
+    .then(() => {
+      alert("Answer Submitted");
+      loadDoubts();
+    });
+  }
+
+  // Load notices
+  function loadNotices(){
+    fetch(`${WEB_APP_URL}?getNotices=true`)
+    .then(res => res.json())
+    .then(data => {
+      let html = "";
+      data.forEach(n => {
+        html += `
+          <div class="card">
+            <b>${n.title}</b><br>
+            <img src="${n.image}" width="100%">
+          </div>
+        `;
+      });
+      document.getElementById("noticeList").innerHTML = html;
+    });
+  }
+
+  // Initial load
+  loadDoubts();
+  loadNotices();
 </script>
 
 </body>
